@@ -1,0 +1,28 @@
+<div *ngIf="info.token; else loggedOut">
+  <button class="btn btn-secondary" (click)="logout()">Logout</button>
+
+
+
+ 
+</div>
+<ng-template #loggedOut>
+  Please login.
+</ng-template>
+
+
+
+
+<table datatable [dtOptions]="dtOptions" class="table row-border hover" *ngIf="this.temp">
+  <thead>
+    <tr>
+      <th style="width:10%">Action nr</th>
+      <th>Log:</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let his of history">
+      <td style="width:10%">{{his.id}}</td>
+      <td>{{his.log}}</td>
+    </tr>
+  </tbody>
+</table>

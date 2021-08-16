@@ -1,0 +1,34 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+  
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" style="color:white;">File Manager</a>
+
+  <div class="container-fluid">
+
+    <ul class="nav navbar-nav" routerLinkActive="active">
+      <li class="nav-item"><a class="nav-link" routerLink="home">History</a></li>
+      <li *ngIf="!authority" class="nav-item">
+        <a class="nav-link" routerLink="auth/login">Login</a>
+      </li>
+      <li *ngIf="authority" class="nav-item">
+        <a class="nav-link" routerLink="files">Explorer</a>
+      </li>
+    </ul>
+  </div>
+
+</nav>
+
+
+<nav class="navbar navbar-inverse">
+  
+</nav>
+<div class="container" id="main-container">
+  <router-outlet></router-outlet>
+</div>
+
+
+
+
+

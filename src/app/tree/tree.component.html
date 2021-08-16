@@ -1,0 +1,96 @@
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkDropList (cdkDropListDropped)="drop($event)">
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding cdkDrag [cdkDragData]="node"
+   (mouseenter)="dragHover(node)" (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()" (cdkDragReleased)="dragEnd()">
+    <button mat-icon-button disabled></button>
+    <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
+      {{ node.type !== 'folder' ? 'description' : 'folder' }}
+    </mat-icon>
+    {{node.name}}  
+    <button mat-icon-button (click)="onOpenModal(node, 'add')"><mat-icon>add</mat-icon></button>
+    <button mat-icon-button (click)="uploadFileComponent.uploadToDir(node.id)"><mat-icon>cloud_upload</mat-icon></button>
+    <button type="button" class="btn " (click)="onOpenModal(node, 'delete')"><mat-icon>delete</mat-icon></button>
+
+  </mat-tree-node>
+
+  <mat-tree-node  *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding cdkDrag [cdkDragData]="node" (mouseenter)="dragHover(node)"
+   (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()" (cdkDragReleased)="dragEnd()">
+    <button  mat-icon-button matTreeNodeToggle (click)="expansionModel.toggle(node.id)"
+            [attr.aria-label]="'toggle ' + node.name">
+      <mat-icon *ngIf="node.type === 'folder'" class="mat-icon-rtl-mirror">
+        {{treeControl.isExpanded(node)  ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+    </button>
+    <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
+      {{ node.type !=='folder' ? 'description' : 'folder' }}
+    </mat-icon>
+
+    <div *ngIf="node.type === 'folder'">{{node.name}} </div>    <a *ngIf="node.type !== 'folder'" href="{{apiUrl}}/files/{{ node.id }}">{{ node.name }}</a>
+
+    <button *ngIf="node.type === 'folder'" mat-icon-button (click)="onOpenModal(node, 'add')"><mat-icon>add</mat-icon></button>
+    <button [disabled]="!uploadFileComponent.selectedFiles" *ngIf="node.type === 'folder'" mat-icon-button (click)="uploadFileComponent.uploadToDir(node.id)"><mat-icon>cloud_upload</mat-icon></button>
+    <button type="button" class="btn" (click)="onOpenModal(node, 'delete')"><mat-icon >delete</mat-icon></button>
+
+   
+  </mat-tree-node>
+
+
+
+
+</mat-tree>
+
+
+<div class="container" style="width:600px">
+ 
+  <app-upload-file #uploadFileComponent></app-upload-file>
+</div>
+
+
+ <!-- Add Dir Modal -->
+ <div class="modal fade" id="addDirModal" tabindex="-1" role="dialog" aria-labelledby="addDirModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+       <div class="modal-header">
+          <h5 class="modal-title" id="addDirModalLabel">Add Dir</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+       </div>
+       <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddDir(editDir, addForm)">
+          <div class="form-group">
+             <label for="name">Dir Name</label>
+             <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+             <input type="hidden" ngModel="{{editDir}}" name="parrentDir" class="form-control" id="parrentDir" placeholder="parrentDir">            </div>
+          <div class="modal-footer">
+             <button type="button" id="add-dir-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+             <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Add new dir </button>
+          </div>
+          </form>
+       </div>
+    </div>
+  </div>
+  </div>
+
+
+  <!-- Delete Modal -->
+<div class="modal fade" id="deleteDirModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="deleteModelLabel">Delete Dir</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <p>Are you sure you want to delete dir "{{deleteDirName}}" and all content?</p>
+           <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+              <button (click)="onDeleteDir(deleteDirId)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+
+
